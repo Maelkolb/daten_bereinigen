@@ -21,10 +21,11 @@ def religion_bereinigen(religion):
         (['w.l.', 'Ned.'], 'sonstige')
     ]
 
-    
+
     for arguments, value in religionen_zu_bereinigen:
         if any(argument in religion for argument in arguments):
             return value
+
     return 'ohne Angabe'
 
 
@@ -33,19 +34,35 @@ def geschlecht_bereinigen(geschlecht):
     geschlechter_zu_bereinigen = [
         (['wg', 'f', ' w'], 'w'),
         ([' m'], 'm'),
-        (['(?)', '24', '2  1/2'], 'ohne Angabe')
+        (['(?)', '24', '2  1/2'], 'unbekannt')
     ]
-    
-    
     for arguments, value in geschlechter_zu_bereinigen:
         if any(argument in geschlecht for argument in arguments):
             return value
     return 'ohne Angabe'
 
 
+def familienstand_bereinigen(familienstand):
+    familienstand = str(familienstand).lower()
+    familienstaende_zu_bereinigen = [
+        (['gesch', 'gesch.', ' gesch', 'dv'], 'geschieden'),
+        (['Ww', 'Wwe', 'Wwer', 'Ww.', 'Wwe.', 'wd', 'Viuva', 'Viuvo', 'Verw'], 'verwitwet'),
+        (['led', 'leggggggd', 'led.', ' led', 'ledig', 's', 'solteiro', 'lel', 'solteira'], 'ledig'),
+        (['verh', 'ver', 'berh', 'verh.', ' verh', 'm', 'casado', 'casada', 'Ehefrau'], 'verheiratet'),
+        (['getr.', 'getrennt'], 'getrennt lebend'),
+        (['(?)', '[?]', '?', '23.03.1914', '02.11.1881', '28.12.1912', '01.06.1906', '21'], 'unbekannt')
+    ]
+    for arguments, value in familienstaende_zu_bereinigen:
+        if any(argument in familienstand for argument in arguments):
+            return value
+
+    return 'ohne Angabe'
+
+
 # Daten bereinigen
 data['Religion'] = data['Religion'].apply(religion_bereinigen)
 data['Geschl'] = data['Geschl'].apply(geschlecht_bereinigen)
+data['Fam_Stand'] = data['Fam_Stand'].apply(familienstand_bereinigen)
 
 # Bereinigte Daten in neue CSV-Datei
 data.to_csv('daten_normisiert.csv', index=False, encoding='utf-8-sig')
