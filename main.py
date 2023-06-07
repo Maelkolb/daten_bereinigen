@@ -21,12 +21,12 @@ def religion_bereinigen(religion):
         (['w.l.', 'Ned.'], 'sonstige')
     ]
 
-
+    
     for arguments, value in religionen_zu_bereinigen:
         if any(argument in religion for argument in arguments):
             return value
-
     return 'ohne Angabe'
+
 
 def geschlecht_bereinigen(geschlecht):
     geschlecht = str(geschlecht).lower()
@@ -35,6 +35,8 @@ def geschlecht_bereinigen(geschlecht):
         ([' m'], 'm'),
         (['(?)', '24', '2  1/2'], 'ohne Angabe')
     ]
+    
+    
     for arguments, value in geschlechter_zu_bereinigen:
         if any(argument in geschlecht for argument in arguments):
             return value
